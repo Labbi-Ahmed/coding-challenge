@@ -6,7 +6,7 @@ import java.util.*;
 @Component
 public class ExecutionPlan {
 
-    public List<Integer> getExecutionOrder(List<VulnerabilityScript>  scripts){
+    public ResponseExecutionOrder getExecutionOrder(List<VulnerabilityScript>  scripts){
         Map<Integer, ArrayList<Integer>> adjacentList = new HashMap<>(); // convert input as graph
         Map<Integer, Integer> inDegree = new HashMap<>();
         ArrayList<Integer> executionOrder = new ArrayList<>(); // store the execution order and return
@@ -21,7 +21,7 @@ public class ExecutionPlan {
              * every script has its dependency so that will be the inDegree of the node
              * That means this script must execute after dependencies execution
              */
-            System.out.println(script.getScriptId() + "---> "+dependencies.size());
+//            System.out.println(script.getScriptId() + "---> "+dependencies.size());
             inDegree.put(script.getScriptId(), dependencies.size());
             /*
              * graph representation of the input
@@ -55,8 +55,11 @@ public class ExecutionPlan {
             }
         }
 
-//        if(scripts.size() != executionOrder.size()) return List.of(1,2,1);
+        if(scripts.size() != executionOrder.size()){
+            return new ResponseExecutionOrder(executionOrder,"Cyclic dependency presents");
+        }
 
-        return executionOrder;
+
+        return new ResponseExecutionOrder(executionOrder);
     }
 }
